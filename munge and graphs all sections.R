@@ -123,3 +123,19 @@ ggplot(seazonesdf2) +
        subtitle = "Annual area burnt by season",
        caption = "Source data: NAFI",
        y = "hectares (ha)")
+
+#burn patch areas section 1
+patchzones <- read.dbf(file = "BurntPatches_area/zones/burntpatches_areas_zones.dbf", as.is = TRUE)
+
+patchzonesdf <- patchzones %>%
+  arrange(YEAR) %>%
+  mutate(sclass = ifelse(HECTARES < 100, 1,
+                         ifelse(HECTARES >= 100 & HECTARES <= 1000, 2,
+                                ifelse(HECTARES >= 1000 & HECTARES <= 10000, 3,
+                                       ifelse(HECTARES >= 10000 & HECTARES <= 100000, 4, 5))))) %>%
+  group_by(YEAR, vegtype, sclass) %>%
+  summarise(hectares = sum(HECTARES))
+  
+  
+  
+    
