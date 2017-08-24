@@ -3,6 +3,7 @@
 #libraries
 library("tidyverse")
 library("foreign")
+library("RColorBrewer")
 
 
 
@@ -134,8 +135,84 @@ patchzonesdf <- patchzones %>%
                                 ifelse(HECTARES >= 1000 & HECTARES <= 10000, 3,
                                        ifelse(HECTARES >= 10000 & HECTARES <= 100000, 4, 5))))) %>%
   group_by(YEAR, vegtype, sclass) %>%
-  summarise(hectares = sum(HECTARES))
+  summarise(hectares = sum(HECTARES)) %>%
+  ungroup()
+
+agecols <- brewer.pal(5,"Set1")
+
+ggplot(filter(patchzonesdf, vegtype == 1)) +
+  geom_col(aes(sclass, hectares/100, fill = as.factor(sclass)), 
+           position = position_dodge()) +
+  facet_grid(YEAR ~ .) +
+  scale_fill_manual(values = agecols,
+                    name = "Burn Patch\nSize",
+                    breaks = c("1", "2", "3", "4", "5"),
+                    labels = c(expression("< 1"~km^2),
+                               expression("1-10"~km^2),
+                               expression("10-100"~km^2),
+                               expression("100-1000"~km^2),
+                               expression("> 1000"~km^2))) + 
+  theme(axis.ticks = element_blank(), axis.text.x = element_blank()) +
+  labs(title = paste0(park, " Area Burnt by Patch Size"),
+       subtitle = "Eucalypt Vegtype",
+       caption = "Source data: NAFI",
+       x = "",
+       y = expression(~km^2))
+
+ggplot(filter(patchzonesdf, vegtype == 1)) +
+  geom_col(aes(YEAR, hectares/100, fill = as.factor(sclass)), 
+           position = position_dodge()) +
+  scale_fill_manual(values = agecols,
+                    name = "Burn Patch\nSize",
+                    breaks = c("1", "2", "3", "4", "5"),
+                    labels = c(expression("< 1"~km^2),
+                               expression("1-10"~km^2),
+                               expression("10-100"~km^2),
+                               expression("100-1000"~km^2),
+                               expression("> 1000"~km^2))) + 
+  theme(axis.ticks = element_blank(), axis.text.x = element_blank()) +
+  theme_bw() +
+  labs(title = paste0(park, " Area Burnt by Patch Size"),
+       subtitle = "Eucalypt Vegtype",
+       caption = "Source data: NAFI",
+       x = "",
+       y = expression(~km^2))
   
-  
-  
-    
+
+ggplot(filter(patchzonesdf, vegtype == 2)) +
+  geom_col(aes(sclass, hectares/100, fill = as.factor(sclass)), 
+           position = position_dodge()) +
+  facet_grid(YEAR ~ .) +
+  scale_fill_manual(values = agecols,
+                    name = "Burn Patch\nSize",
+                    breaks = c("1", "2", "3", "4", "5"),
+                    labels = c(expression("< 1"~km^2),
+                               expression("1-10"~km^2),
+                               expression("10-100"~km^2),
+                               expression("100-1000"~km^2),
+                               expression("> 1000"~km^2))) + 
+  theme(axis.ticks = element_blank(), axis.text.x = element_blank()) +
+  labs(title = paste0(park, " Area Burnt by Patch Size"),
+       subtitle = "Sandstone Vegtype",
+       caption = "Source data: NAFI",
+       x = "",
+       y = expression(~km^2))
+
+ggplot(filter(patchzonesdf, vegtype == 2)) +
+  geom_col(aes(YEAR, hectares/100, fill = as.factor(sclass)), 
+           position = position_dodge()) +
+  scale_fill_manual(values = agecols,
+                    name = "Burn Patch\nSize",
+                    breaks = c("1", "2", "3", "4", "5"),
+                    labels = c(expression("< 1"~km^2),
+                               expression("1-10"~km^2),
+                               expression("10-100"~km^2),
+                               expression("100-1000"~km^2),
+                               expression("> 1000"~km^2))) + 
+  theme(axis.ticks = element_blank(), axis.text.x = element_blank()) +
+  theme_bw() +
+  labs(title = paste0(park, " Area Burnt by Patch Size"),
+       subtitle = "sandstone Vegtype",
+       caption = "Source data: NAFI",
+       x = "",
+       y = expression(~km^2))
